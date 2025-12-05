@@ -50,7 +50,7 @@ export const productsService = {
       return products
         .filter((p: Product) => {
           const dealStart = new Date(p.dealDate);
-          const dealEnd = new Date(p.dealEndDate);
+          const dealEnd = p.dealEndDate ? new Date(p.dealEndDate) : new Date();
           const targetDate = new Date(date);
           return dealStart <= targetDate && targetDate <= dealEnd;
         })
@@ -59,7 +59,7 @@ export const productsService = {
           if (a.isVerified && !b.isVerified) return -1;
           if (!a.isVerified && b.isVerified) return 1;
           // 최신순
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
         });
     } catch (error) {
       console.error('Get products by date error:', error);

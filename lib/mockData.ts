@@ -180,3 +180,50 @@ export const getProductById = (id: string): Product | undefined => {
 export const getReviewSummary = (productId: string): ReviewSummary | undefined => {
   return mockReviewSummaries[productId];
 };
+
+export const getAllProducts = (): Product[] => {
+  return mockProducts;
+};
+
+export const deleteProduct = (id: string, userId: string): boolean => {
+  // Mock implementation - always returns success
+  console.log(`Deleting product ${id} by user ${userId}`);
+  return true;
+};
+
+export const addProduct = (product: Partial<Product>): Product => {
+  // Mock implementation - returns a new product with generated ID
+  const newProduct: Product = {
+    id: String(mockProducts.length + 1),
+    title: product.title || '',
+    originalPrice: product.originalPrice || 0,
+    salePrice: product.salePrice || 0,
+    discountRate: product.discountRate || 0,
+    imageUrl: product.imageUrl || '',
+    marketplace: product.marketplace || 'coupang',
+    productUrl: product.productUrl || '#',
+    rating: product.rating || 0,
+    reviewCount: product.reviewCount || 0,
+    dealDate: product.dealDate || new Date().toISOString().split('T')[0],
+    category: product.category || '',
+    tags: product.tags || []
+  };
+  mockProducts.push(newProduct);
+  return newProduct;
+};
+
+export const saveReviewSummary = (productId: string, summary: Partial<ReviewSummary>): ReviewSummary => {
+  // Mock implementation - saves and returns the review summary
+  const newSummary: ReviewSummary = {
+    productId,
+    overallSentiment: summary.overallSentiment || 'neutral',
+    pros: summary.pros || [],
+    cons: summary.cons || [],
+    keyPoints: summary.keyPoints || [],
+    aiInsight: summary.aiInsight || '',
+    totalReviews: summary.totalReviews || 0,
+    averageRating: summary.averageRating || 0
+  };
+  mockReviewSummaries[productId] = newSummary;
+  return newSummary;
+};

@@ -56,14 +56,14 @@ export default function MyPage() {
       : allProducts.filter(p => p.authorId === currentUser.id);
 
     setProducts(userProducts.sort((a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
     ));
 
     // 즐겨찾기 상품 로드
     const favoriteIds = await getUserFavorites(currentUser.id);
     const favorites = allProducts.filter(p => favoriteIds.includes(p.id));
     setFavoriteProducts(favorites.sort((a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
     ));
 
     // 키워드 알림 로드
@@ -77,7 +77,7 @@ export default function MyPage() {
     // 관리자의 경우 블랙리스트 상태 로드
     if (currentUser.role === 'admin') {
       const status: Record<string, boolean> = {};
-      const uniqueAuthors = Array.from(new Set(allProducts.map(p => p.authorId)));
+      const uniqueAuthors = Array.from(new Set(allProducts.map(p => p.authorId).filter((id): id is string => !!id)));
       uniqueAuthors.forEach(authorId => {
         status[authorId] = isUserBlacklisted(authorId);
       });
@@ -373,7 +373,7 @@ export default function MyPage() {
                           </span>
                         </div>
                         <div className="text-xs text-gray-500">
-                          {new Date(product.createdAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                          {new Date(product.createdAt || 0).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                         </div>
                         <div className="space-y-0.5">
                           <div className="text-xs text-gray-500 line-through">
@@ -437,13 +437,13 @@ export default function MyPage() {
                     })()}
 
                     {/* 작성자 */}
-                    {user.role === 'admin' && product.authorId !== user.id && (
+                    {user.role === 'admin' && product.authorId && product.authorId !== user.id && (
                       <div className="flex items-center justify-between py-2 border-t border-white/10">
                         <div className="text-xs text-gray-500">
-                          작성자: {product.authorName}
+                          작성자: {product.authorName || 'Unknown'}
                         </div>
                         <button
-                          onClick={() => handleToggleBlacklist(product.authorId, product.authorName, product.authorName)}
+                          onClick={() => handleToggleBlacklist(product.authorId!, product.authorName || 'Unknown', product.authorName || 'Unknown')}
                           className={`text-xs px-2 py-1 rounded-full font-semibold transition-all ${
                             userBlacklistStatus[product.authorId]
                               ? 'bg-red-500/20 text-red-400'
@@ -497,7 +497,7 @@ export default function MyPage() {
                         <div>
                           <h3 className="text-lg font-bold mb-1">{product.title}</h3>
                           <p className="text-sm text-gray-400">
-                            {new Date(product.createdAt).toLocaleDateString('ko-KR')}
+                            {new Date(product.createdAt || 0).toLocaleDateString('ko-KR')}
                           </p>
                         </div>
                         <div className="flex gap-2">
@@ -524,7 +524,7 @@ export default function MyPage() {
                       </div>
 
                       <div className="text-sm text-gray-400 mb-3">
-                        {new Date(product.dealDate).toLocaleDateString('ko-KR')} ~ {new Date(product.dealEndDate).toLocaleDateString('ko-KR')}
+                        {new Date(product.dealDate).toLocaleDateString('ko-KR')} ~ {product.dealEndDate ? new Date(product.dealEndDate).toLocaleDateString('ko-KR') : 'TBD'}
                       </div>
 
                       {/* 통계 정보 */}
@@ -578,13 +578,13 @@ export default function MyPage() {
                       })()}
 
                       {/* 작성자 (관리자만 표시) */}
-                      {user.role === 'admin' && product.authorId !== user.id && (
+                      {user.role === 'admin' && product.authorId && product.authorId !== user.id && (
                         <div className="flex items-center justify-between mb-4">
                           <div className="text-sm text-gray-500">
-                            작성자: {product.authorName}
+                            작성자: {product.authorName || 'Unknown'}
                           </div>
                           <button
-                            onClick={() => handleToggleBlacklist(product.authorId, product.authorName, product.authorName)}
+                            onClick={() => handleToggleBlacklist(product.authorId!, product.authorName || 'Unknown', product.authorName || 'Unknown')}
                             className={`text-xs px-3 py-1 rounded-full font-semibold transition-all ${
                               userBlacklistStatus[product.authorId]
                                 ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
@@ -677,7 +677,7 @@ export default function MyPage() {
                           </span>
                         </div>
                         <div className="text-xs text-gray-500">
-                          {new Date(product.createdAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                          {new Date(product.createdAt || 0).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                         </div>
                         <div className="space-y-0.5">
                           <div className="text-xs text-gray-500 line-through">
@@ -743,7 +743,7 @@ export default function MyPage() {
                         <div>
                           <h3 className="text-lg font-bold mb-1">{product.title}</h3>
                           <p className="text-sm text-gray-400">
-                            {new Date(product.createdAt).toLocaleDateString('ko-KR')}
+                            {new Date(product.createdAt || 0).toLocaleDateString('ko-KR')}
                           </p>
                         </div>
                         <div className="flex gap-2">

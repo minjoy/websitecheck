@@ -155,7 +155,6 @@ export default function UploadPage() {
         authorId: user.id,
         authorName: user.name,
         type: productType,
-        partnersText,
       });
 
       if (!newProduct) {

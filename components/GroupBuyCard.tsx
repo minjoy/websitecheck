@@ -242,7 +242,7 @@ export default function GroupBuyCard({ product, index }: GroupBuyCardProps) {
 
           {/* 공구 기간 */}
           <div className="text-xs text-gray-400 mb-2">
-            {new Date(product.dealDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })} ~ {new Date(product.dealEndDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+            {new Date(product.dealDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })} ~ {product.dealEndDate ? new Date(product.dealEndDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) : 'TBD'}
           </div>
 
           {/* 가격 */}

@@ -14,6 +14,10 @@ const marketplaceColors = {
   naver: 'from-green-500 to-emerald-500',
   gmarket: 'from-orange-500 to-amber-500',
   '11st': 'from-blue-500 to-cyan-500',
+  instagram: 'from-pink-500 to-purple-500',
+  blog: 'from-blue-500 to-cyan-500',
+  cafe: 'from-yellow-500 to-orange-500',
+  other: 'from-gray-500 to-slate-500',
 };
 
 const marketplaceNames = {
@@ -21,6 +25,10 @@ const marketplaceNames = {
   naver: '네이버',
   gmarket: 'G마켓',
   '11st': '11번가',
+  instagram: '인스타그램',
+  blog: '블로그',
+  cafe: '카페',
+  other: '기타',
 };
 
 export default function ProductCard({ product, index }: ProductCardProps) {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import ClientProviders from "@/components/ClientProviders";
 
 export const metadata: Metadata = {
   title: "AI 특가 - 오늘의 스마트한 쇼핑",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        <Header />
-        {children}
+        <ClientProviders>
+          <Header />
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );

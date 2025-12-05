@@ -137,8 +137,8 @@ export default function GroupBuyPage() {
 
                       {/* 작성자 및 날짜 */}
                       <div className="text-xs text-gray-500 mb-3 flex items-center justify-between">
-                        <span>by {product.authorName}</span>
-                        <span>{new Date(product.createdAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
+                        <span>by {product.authorName || 'Unknown'}</span>
+                        <span>{product.createdAt ? new Date(product.createdAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) : ''}</span>
                       </div>
 
                       {/* 가격 */}
@@ -153,7 +153,7 @@ export default function GroupBuyPage() {
 
                       {/* 공구 기간 */}
                       <div className="text-xs text-gray-500 mb-3">
-                        {new Date(product.dealDate).toLocaleDateString('ko-KR')} ~ {new Date(product.dealEndDate).toLocaleDateString('ko-KR')}
+                        {new Date(product.dealDate).toLocaleDateString('ko-KR')} ~ {product.dealEndDate ? new Date(product.dealEndDate).toLocaleDateString('ko-KR') : 'TBD'}
                       </div>
 
                       {/* 공구 참여 버튼 */}
