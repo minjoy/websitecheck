@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+// API Route를 동적으로 설정 (쿼리 파라미터 사용)
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -33,7 +36,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      products: products.map((p) => ({
+      products: products.map((p: typeof products[number]) => ({
         ...p,
         id: p.id.toString(),
       })),
