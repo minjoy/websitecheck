@@ -1,9 +1,9 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
+const JWT_SECRET: string = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '15m';
 
 export interface JWTPayload {
   userId: string;
@@ -12,8 +12,7 @@ export interface JWTPayload {
 }
 
 export function generateToken(payload: JWTPayload): string {
-  const options: SignOptions = { expiresIn: JWT_EXPIRES_IN };
-  return jwt.sign(payload, JWT_SECRET, options);
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 export function verifyToken(token: string): JWTPayload {
