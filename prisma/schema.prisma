@@ -33,6 +33,7 @@ model User {
   dailyPattern        DailyPattern?  @map("daily_pattern")
   profileCompletedAt  DateTime?      @map("profile_completed_at")
   suppressProfilePopup Boolean       @default(false) @map("suppress_profile_popup") @db.TinyInt
+  isBlacklisted       Boolean        @default(false) @map("is_blacklisted") @db.TinyInt
 
   // 타임스탬프
   lastLoginAt DateTime? @map("last_login_at")
@@ -47,6 +48,7 @@ model User {
   keywordAlerts           KeywordAlert[]
   userActions             UserAction[]
   userCategoryWeights     UserCategoryWeight[]
+  productReports          ProductReport[]
 
   @@index([email])
   @@map("users")
@@ -143,6 +145,7 @@ model Product {
   discountRate    Float         @default(0) @map("discount_rate")
   sourceSite      String?       @map("source_site") @db.VarChar(255)
   reviewCount     Int?          @map("review_count")
+  rating          Float?        @db.Float
   pros            String?       @db.Text
   cons            String?       @db.Text
   summary         String?       @db.Text
@@ -150,6 +153,8 @@ model Product {
   viewCount       Int           @default(0) @map("view_count")
   clickCount      Int           @default(0) @map("click_count")
   favoriteCount   Int           @default(0) @map("favorite_count")
+  reportCount     Int           @default(0) @map("report_count")
+  isHidden        Boolean       @default(false) @map("is_hidden") @db.TinyInt
   status          ProductStatus @default(ACTIVE)
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
@@ -160,6 +165,7 @@ model Product {
   favorites             Favorite[]
   keywordAlertLogs      KeywordAlertLog[]
   userActions           UserAction[]
+  productReports        ProductReport[]
 
   @@index([userId])
   @@index([status])
@@ -272,6 +278,24 @@ model UserCategoryWeight {
 
   @@unique([userId, categoryId])
   @@map("user_category_weights")
+}
+
+// ==========================================
+// ProductReport 모델
+// ==========================================
+model ProductReport {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  userId    BigInt   @map("user_id") @db.UnsignedBigInt
+  productId BigInt   @map("product_id") @db.UnsignedBigInt
+  reason    String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@map("product_reports")
 }
 
 // ==========================================

@@ -2,15 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/Toast';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { showToast } = useToast();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+    setLoading(true);
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -20,14 +30,27 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        window.location.href = '/';
+        showToast('로그인 성공!', 'success');
+        setTimeout(() => {
+          router.push('/');
+          router.refresh();
+        }, 500);
       } else {
         const data = await response.json();
-        alert(data.error || '로그인에 실패했습니다.');
+        // 에러 메시지를 적절한 필드에 할당
+        if (data.error.includes('이메일') || data.error.includes('가입')) {
+          setErrors({ email: data.error });
+        } else if (data.error.includes('비밀번호')) {
+          setErrors({ password: data.error });
+        } else {
+          setErrors({ email: data.error });
+        }
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('로그인 중 오류가 발생했습니다.');
+      setErrors({ email: '서버 오류가 발생했습니다' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,32 +83,50 @@ export default function LoginPage() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors"
+                className={`w-full px-4 py-3 bg-white/5 border ${
+                  errors.email ? 'border-red-400' : 'border-white/10'
+                } rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors`}
                 placeholder="your@email.com"
+                disabled={loading}
                 required
               />
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-2">⚠️ {errors.email}</p>
+              )}
             </div>
 
             {/* 비밀번호 */}
             <div>
-              <label className="block text-sm font-semibold mb-2">비밀번호</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold">비밀번호</label>
+                <Link href="/forgot-password" className="text-xs text-purple-400 hover:text-purple-300">
+                  비밀번호 찾기
+                </Link>
+              </div>
               <input
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors"
+                className={`w-full px-4 py-3 bg-white/5 border ${
+                  errors.password ? 'border-red-400' : 'border-white/10'
+                } rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors`}
                 placeholder="••••••••"
+                disabled={loading}
                 required
               />
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-2">⚠️ {errors.password}</p>
+              )}
             </div>
 
             {/* 로그인 버튼 */}
             <button
               type="submit"
-              className="w-full glass py-4 rounded-xl font-semibold glass-hover mt-4"
+              disabled={loading}
+              className="w-full glass py-4 rounded-xl font-semibold glass-hover mt-4 disabled:opacity-50"
             >
               <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                로그인
+                {loading ? '로그인 중...' : '로그인'}
               </span>
             </button>
           </div>
