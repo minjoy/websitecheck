@@ -52,7 +52,8 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      products: products.map((p) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      products: products.map((p: any) => ({
         ...p,
         id: p.id.toString(),
         userId: p.userId?.toString(),

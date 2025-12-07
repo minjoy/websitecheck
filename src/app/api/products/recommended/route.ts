@@ -61,7 +61,8 @@ export async function GET(request: NextRequest) {
     });
 
     // 각 상품에 점수 계산
-    const scoredProducts = products.map((product) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const scoredProducts = products.map((product: any) => {
       let score = 0;
 
       // 기본 인기도 점수
@@ -86,13 +87,15 @@ export async function GET(request: NextRequest) {
     });
 
     // 점수순으로 정렬
-    scoredProducts.sort((a, b) => b.score - a.score);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    scoredProducts.sort((a: any, b: any) => b.score - a.score);
 
     // 상위 N개 선택
     const recommended = scoredProducts.slice(0, limit);
 
     return NextResponse.json({
-      products: recommended.map((p) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      products: recommended.map((p: any) => ({
         id: p.id.toString(),
         userId: p.userId?.toString(),
         title: p.title,

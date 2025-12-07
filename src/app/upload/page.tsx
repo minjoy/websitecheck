@@ -144,11 +144,11 @@ export default function UploadPage() {
           <button
             type="button"
             onClick={() => setProductType('group-buy')}
-            className={\`flex-1 px-6 py-4 rounded-xl border transition-all \${
+            className={`flex-1 px-6 py-4 rounded-xl border transition-all ${
               productType === 'group-buy'
                 ? 'bg-orange-500/30 border-orange-400'
                 : 'glass border-white/10 glass-hover'
-            }\`}
+            }`}
           >
             <div className="text-2xl mb-2">🔥</div>
             <div className="font-semibold">공동구매</div>
@@ -159,13 +159,13 @@ export default function UploadPage() {
             type="button"
             onClick={() => isAdmin && setProductType('admin-deal')}
             disabled={!isAdmin}
-            className={\`flex-1 px-6 py-4 rounded-xl border transition-all \${
+            className={`flex-1 px-6 py-4 rounded-xl border transition-all ${
               productType === 'admin-deal'
                 ? 'bg-green-500/30 border-green-400'
                 : isAdmin
                 ? 'glass border-white/10 glass-hover'
                 : 'glass border-white/10 opacity-50 cursor-not-allowed'
-            }\`}
+            }`}
           >
             <div className="text-2xl mb-2">✅</div>
             <div className="font-semibold">관리자 추천 특가</div>

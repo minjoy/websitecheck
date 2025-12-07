@@ -57,7 +57,7 @@ export default function HomePage() {
     setReportLoading(true);
 
     try {
-      const response = await fetch(\`/api/products/\${productId}/report\`, {
+      const response = await fetch(`/api/products/${productId}/report`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: reportReason }),
