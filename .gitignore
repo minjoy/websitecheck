@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+# Exception: Include generated Prisma Client for restricted environments
+!/node_modules/.prisma
+!/node_modules/@prisma/client
 /.pnp
 .pnp.js
 .yarn/install-state.gz
