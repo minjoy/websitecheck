@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, KeywordType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -160,7 +160,7 @@ async function main() {
           categoryId: category.id,
           keyword: kw.keyword,
           weight: kw.weight,
-          keywordType: kw.type,
+          keywordType: kw.type as KeywordType,
         },
       });
     }
