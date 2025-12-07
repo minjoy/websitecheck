@@ -5,6 +5,51 @@ import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+// 상품 조회
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const productId = BigInt(params.id);
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            isAdmin: true,
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json({ error: '상품을 찾을 수 없습니다' }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      product: {
+        ...product,
+        id: product.id.toString(),
+        userId: product.userId?.toString(),
+        user: product.user
+          ? {
+              id: product.user.id.toString(),
+              email: product.user.email,
+              isAdmin: product.user.isAdmin,
+            }
+          : null,
+      },
+    });
+  } catch (error) {
+    console.error('Get product error:', error);
+    return NextResponse.json({ error: '서버 오류가 발생했습니다' }, { status: 500 });
+  }
+}
+
 // 상품 수정
 export async function PUT(
   request: NextRequest,

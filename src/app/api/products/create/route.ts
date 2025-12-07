@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth';
 import prisma from '@/lib/prisma';
+import { classifyProduct } from '@/lib/category-classifier';
 
 export const dynamic = 'force-dynamic';
 
@@ -96,7 +97,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: 카테고리 자동 분류 (나중에 구현)
+    // 카테고리 자동 분류
+    await classifyProduct(product.id, title);
 
     return NextResponse.json({
       message: '상품이 등록되었습니다',
